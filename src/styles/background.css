@@ -1,0 +1,117 @@
+.background-container {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    transition: background-color 1s ease;
+}
+
+/* --- HIDE ALL ANIMATION ELEMENTS BY DEFAULT --- */
+.sun, .stars, .stars2, .stars3, #cloud-group-1, #cloud-group-2, .rain-streaks {
+    display: none;
+}
+
+/* --- DAYTIME --- */
+.background-container.daytime {
+    background: linear-gradient(to top, #6DD5FA, #2980B9);
+    animation: daytime-gradient 120s ease infinite alternate;
+}
+.background-container.daytime .sun {
+    display: block;
+    position: absolute;
+    top: 10%;
+    left: 40%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255, 255, 0, 0.4) 0%, rgba(255, 255, 0, 0) 60%);
+    animation: drift 180s ease-in-out infinite alternate;
+}
+@keyframes daytime-gradient {
+    from { background: linear-gradient(to top, #a1c4fd, #c2e9fb); }
+    to { background: linear-gradient(to top, #6a85b6, #bac8e0); }
+}
+@keyframes drift {
+    from { transform: translate(-20%, -10%) scale(0.8); }
+    to { transform: translate(20%, 10%) scale(1.2); }
+}
+
+/* --- NIGHTTIME --- */
+.background-container.nighttime {
+    background: #0F2027; 
+    background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);
+    background: linear-gradient(to top, #2C5364, #203A43, #0F2027);
+}
+.stars, .stars2, .stars3 {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+}
+.stars {
+    background-image: radial-gradient(2px 2px at 20px 30px, #eee, transparent), radial-gradient(2px 2px at 40px 70px, #fff, transparent);
+    animation: twinkle 1.5s infinite linear;
+}
+.stars2 {
+    background-image: radial-gradient(1px 1px at 100px 120px, #ddd, transparent), radial-gradient(1px 1px at 160px 180px, #eee, transparent);
+    animation: twinkle 3s infinite linear;
+}
+.stars3 {
+    background-image: radial-gradient(3px 3px at 200px 80px, #fff, transparent);
+    animation: twinkle 5s infinite linear;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* --- CLOUDY --- */
+.background-container.cloudy {
+    background: #bdc3c7;
+    background: -webkit-linear-gradient(to top, #2c3e50, #bdc3c7);
+    background: linear-gradient(to top, #2c3e50, #bdc3c7);
+}
+.background-container.cloudy #cloud-group-1, .background-container.cloudy #cloud-group-2 {
+    display: block;
+    position: absolute;
+    inset: 0;
+}
+.cloud {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
+}
+.cloud-1 { top: 10%; left: -20%; width: 200px; height: 60px; }
+.cloud-2 { top: 25%; left: -30%; width: 250px; height: 80px; }
+.cloud-3 { top: 5%; left: -10%; width: 150px; height: 50px; }
+.cloud-4 { top: 50%; left: -25%; width: 300px; height: 100px; }
+.cloud-5 { top: 65%; left: -15%; width: 220px; height: 70px; }
+.cloud-6 { top: 40%; left: -20%; width: 180px; height: 60px; }
+#cloud-group-1 { animation: drift-right 60s linear infinite; }
+#cloud-group-2 { animation: drift-right 90s linear infinite; }
+@keyframes drift-right {
+    from { transform: translateX(0); }
+    to { transform: translateX(150vw); }
+}
+
+/* --- RAINY --- */
+.background-container.rainy {
+    background: #0F2027;
+}
+.background-container.rainy .rain-streaks {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(10deg, transparent 50%, rgba(255, 255, 255, 0.2) 50%);
+    background-size: 5px 50px;
+    animation: rain-fall 0.3s linear infinite;
+}
+@keyframes rain-fall {
+  from { background-position: 0% 0%; }
+  to { background-position: 50% 100%; }
+}

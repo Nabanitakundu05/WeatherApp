@@ -1,0 +1,14 @@
+.weekly-forecast-item {
+  transition: all 0.3s ease;
+}
+
+.weekly-forecast-item:hover {
+  transform: translateY(-4px);
+  background-color: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Remove border from the last item */
+.weekly-forecast-item:last-child {
+  border-bottom: none;
+}

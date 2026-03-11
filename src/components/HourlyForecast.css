@@ -1,0 +1,19 @@
+.hourly-forecast-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 1rem 0;
+  /* For browsers that support it, hide the scrollbar */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* For Webkit browsers like Chrome, Safari */
+.hourly-forecast-container::-webkit-scrollbar {
+  display: none;
+}
+
+.active-hour {
+  border: 2px solid rgba(56, 189, 248, 0.8);
+  box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
+  transform: scale(1.05);
+}
