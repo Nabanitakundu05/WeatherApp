@@ -3,115 +3,167 @@
     inset: 0;
     z-index: 0;
     overflow: hidden;
-    transition: background-color 1s ease;
+    transition: background 2s ease;
 }
 
 /* --- HIDE ALL ANIMATION ELEMENTS BY DEFAULT --- */
-.sun, .stars, .stars2, .stars3, #cloud-group-1, #cloud-group-2, .rain-streaks {
+.sun, .stars, .stars2, .stars3, #cloud-group-1, #cloud-group-2, .rain-streaks, .snowflake-container, .storm-flash {
     display: none;
 }
 
-/* --- DAYTIME --- */
+/* --- DAYTIME (CLEAR) --- */
 .background-container.daytime {
-    background: linear-gradient(to top, #6DD5FA, #2980B9);
+    background: linear-gradient(to bottom, #87CEEB, #E0F6FF);
     animation: daytime-gradient 120s ease infinite alternate;
 }
 .background-container.daytime .sun {
     display: block;
     position: absolute;
     top: 10%;
-    left: 40%;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(255, 255, 0, 0.4) 0%, rgba(255, 255, 0, 0) 60%);
-    animation: drift 180s ease-in-out infinite alternate;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 200, 0, 0.6) 0%, rgba(255, 180, 0, 0.3) 30%, rgba(255, 150, 0, 0) 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(255, 200, 0, 0.4);
+    animation: sun-float 8s ease-in-out infinite;
 }
 @keyframes daytime-gradient {
-    from { background: linear-gradient(to top, #a1c4fd, #c2e9fb); }
-    to { background: linear-gradient(to top, #6a85b6, #bac8e0); }
+    0% { background: linear-gradient(to bottom, #87CEEB, #E0F6FF); }
+    50% { background: linear-gradient(to bottom, #6DB3D9, #C5E3FF); }
+    100% { background: linear-gradient(to bottom, #87CEEB, #E0F6FF); }
 }
-@keyframes drift {
-    from { transform: translate(-20%, -10%) scale(0.8); }
-    to { transform: translate(20%, 10%) scale(1.2); }
-}
-
-/* --- NIGHTTIME --- */
-.background-container.nighttime {
-    background: #0F2027; 
-    background: -webkit-linear-gradient(to top, #2C5364, #203A43, #0F2027);
-    background: linear-gradient(to top, #2C5364, #203A43, #0F2027);
-}
-.stars, .stars2, .stars3 {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    background: transparent;
-}
-.stars {
-    background-image: radial-gradient(2px 2px at 20px 30px, #eee, transparent), radial-gradient(2px 2px at 40px 70px, #fff, transparent);
-    animation: twinkle 1.5s infinite linear;
-}
-.stars2 {
-    background-image: radial-gradient(1px 1px at 100px 120px, #ddd, transparent), radial-gradient(1px 1px at 160px 180px, #eee, transparent);
-    animation: twinkle 3s infinite linear;
-}
-.stars3 {
-    background-image: radial-gradient(3px 3px at 200px 80px, #fff, transparent);
-    animation: twinkle 5s infinite linear;
-}
-@keyframes twinkle {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.2; }
+@keyframes sun-float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-20px); }
 }
 
 /* --- CLOUDY --- */
 .background-container.cloudy {
-    background: #bdc3c7;
-    background: -webkit-linear-gradient(to top, #2c3e50, #bdc3c7);
-    background: linear-gradient(to top, #2c3e50, #bdc3c7);
+    background: linear-gradient(to bottom, #95A5A6, #BDC3C7);
+    animation: cloudy-gradient 90s ease infinite alternate;
 }
-.background-container.cloudy #cloud-group-1, .background-container.cloudy #cloud-group-2 {
+.background-container.cloudy #cloud-group-1, 
+.background-container.cloudy #cloud-group-2 {
     display: block;
     position: absolute;
     inset: 0;
 }
 .cloud {
     position: absolute;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    box-shadow: 10px 10px 20px rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 100px;
 }
-.cloud-1 { top: 10%; left: -20%; width: 200px; height: 60px; }
-.cloud-2 { top: 25%; left: -30%; width: 250px; height: 80px; }
-.cloud-3 { top: 5%; left: -10%; width: 150px; height: 50px; }
-.cloud-4 { top: 50%; left: -25%; width: 300px; height: 100px; }
-.cloud-5 { top: 65%; left: -15%; width: 220px; height: 70px; }
-.cloud-6 { top: 40%; left: -20%; width: 180px; height: 60px; }
-#cloud-group-1 { animation: drift-right 60s linear infinite; }
-#cloud-group-2 { animation: drift-right 90s linear infinite; }
-@keyframes drift-right {
+.cloud-1 { top: 15%; left: -200px; width: 280px; height: 90px; animation: drift-cloud 40s linear infinite; }
+.cloud-2 { top: 35%; left: -300px; width: 320px; height: 100px; animation: drift-cloud 50s linear infinite; }
+.cloud-3 { top: 55%; left: -250px; width: 260px; height: 80px; animation: drift-cloud 45s linear infinite; }
+.cloud-4 { top: 25%; left: -350px; width: 300px; height: 95px; animation: drift-cloud 60s linear infinite; }
+.cloud-5 { top: 50%; left: -280px; width: 290px; height: 85px; animation: drift-cloud 55s linear infinite; }
+.cloud-6 { top: 70%; left: -240px; width: 270px; height: 75px; animation: drift-cloud 50s linear infinite; }
+@keyframes cloudy-gradient {
+    0% { background: linear-gradient(to bottom, #7F8C8D, #95A5A6); }
+    100% { background: linear-gradient(to bottom, #95A5A6, #BDC3C7); }
+}
+@keyframes drift-cloud {
     from { transform: translateX(0); }
-    to { transform: translateX(150vw); }
+    to { transform: translateX(calc(100vw + 400px)); }
 }
 
 /* --- RAINY --- */
 .background-container.rainy {
-    background: #0F2027;
+    background: linear-gradient(to bottom, #2C2C3E, #1F1F2E);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
 }
 .background-container.rainy .rain-streaks {
     display: block;
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(10deg, transparent 50%, rgba(255, 255, 255, 0.2) 50%);
-    background-size: 5px 50px;
-    animation: rain-fall 0.3s linear infinite;
+    background: radial-gradient(circle at 50% 50%, rgba(100, 180, 220, 0.15) 0%, transparent 100%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
-@keyframes rain-fall {
-  from { background-position: 0% 0%; }
-  to { background-position: 50% 100%; }
+
+/* --- SNOWY --- */
+.background-container.snowy {
+    background: linear-gradient(to bottom, #D0E8F2, #F0F8FF);
+}
+.background-container.snowy .snowflake-container {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, white, rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 60% 70%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 50% 50%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 80% 10%, white, rgba(255,255,255,0)),
+        radial-gradient(2px 2px at 90% 60%, white, rgba(255,255,255,0)),
+        radial-gradient(1px 1px at 30% 80%, white, rgba(255,255,255,0));
+    background-size: 200% 200%;
+    background-position: 0% 0%;
+    animation: snow-fall 10s linear infinite;
+}
+@keyframes snow-fall {
+    0% { transform: translateY(-100vh); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* --- STORMY --- */
+.background-container.stormy {
+    background: linear-gradient(to bottom, #1C1C2C, #2D2D44);
+}
+.background-container.stormy #cloud-group-1,
+.background-container.stormy #cloud-group-2 {
+    display: block;
+    position: absolute;
+    inset: 0;
+}
+.background-container.stormy .cloud {
+    background: rgba(60, 60, 80, 0.6);
+}
+.background-container.stormy .rain-streaks {
+    display: block;
+    position: absolute;
+    top: -100%;
+    left: -100%;
+    width: 200%;
+    height: 200%;
+    background-image: 
+        linear-gradient(110deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+    background-size: 20px 250px;
+    animation: rain-fall 0.25s linear infinite;
+    opacity: 0.8;
+}
+.background-container.stormy .storm-flash {
+    display: block;
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0);
+    animation: lightning-flash 4s ease-in-out infinite;
+    pointer-events: none;
+}
+@keyframes lightning-flash {
+    0%, 10%, 15%, 100% { background: rgba(255,255,255,0); }
+    11%, 14% { background: rgba(255,255,255,0.3); }
+}
+
+/* --- FOGGY --- */
+.background-container.foggy {
+    background: linear-gradient(to bottom, #A0A0B0, #C0C0D0);
+    animation: fog-pulse 4s ease-in-out infinite;
+}
+.background-container.foggy #cloud-group-1,
+.background-container.foggy #cloud-group-2 {
+    display: block;
+    position: absolute;
+    opacity: 0.6;
+    inset: 0;
+}
+.background-container.foggy .cloud {
+    background: rgba(200, 200, 210, 0.4);
+}
+@keyframes fog-pulse {
+    0%, 100% { background: linear-gradient(to bottom, #A0A0B0, #C0C0D0); }
+    50% { background: linear-gradient(to bottom, #B0B0C0, #D0D0E0); }
 }
