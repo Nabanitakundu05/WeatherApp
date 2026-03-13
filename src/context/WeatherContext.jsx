@@ -13,12 +13,20 @@ export const useWeatherContext = () => {
 
 export const WeatherProvider = ({ children }) => {
     const [city, setCity] = useState(() => localStorage.getItem('lastCity') || 'London');
-    const { weatherData: rawWeatherData, loading, error } = useWeather(city);
+    const [coordinates, setCoordinatesState] = useState(null);
+    const { weatherData: rawWeatherData, loading, error } = useWeather(city, coordinates);
     const [tempUnit, setTempUnit] = useState('C');
 
     const handleSetCity = (newCity) => {
         setCity(newCity);
+        setCoordinatesState(null);
         localStorage.setItem('lastCity', newCity);
+    };
+
+    const handleSetCoordinates = (lat, lon) => {
+        setCoordinatesState({ lat, lon });
+        localStorage.setItem('lastLat', lat);
+        localStorage.setItem('lastLon', lon);
     };
 
     const toggleTempUnit = () => {
@@ -44,7 +52,9 @@ export const WeatherProvider = ({ children }) => {
         setCity: handleSetCity,
         city,
         tempUnit,
-        toggleTempUnit
+        toggleTempUnit,
+        setCoordinates: handleSetCoordinates,
+        coordinates
     };
 
     return (
