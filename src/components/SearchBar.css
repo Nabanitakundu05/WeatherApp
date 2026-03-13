@@ -25,3 +25,31 @@
     transform: rotate(360deg);
   }
 }
+
+/* Glass input styling */
+.glass-input {
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(240, 248, 255, 0.2);
+  background: rgba(240, 248, 255, 0.05);
+  transition: all 0.3s ease;
+}
+
+.glass-input:hover {
+  border-color: rgba(240, 248, 255, 0.3);
+  background: rgba(240, 248, 255, 0.08);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: rgba(135, 206, 235, 0.5);
+  background: rgba(240, 248, 255, 0.12);
+  box-shadow: 0 0 20px rgba(135, 206, 235, 0.2);
+}
+
+.glass-glow-blue {
+  box-shadow: 0 0 15px rgba(135, 206, 235, 0.2);
+}
+
+input::placeholder {
+  color: rgba(240, 248, 255, 0.5);
+}
