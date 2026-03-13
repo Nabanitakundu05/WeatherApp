@@ -1,22 +1,37 @@
 import React from 'react';
 import '../styles/Background.css';
 
-const Background = ({ condition = 'clear' }) => {
+const Background = ({ condition = 'Clear' }) => {
   const getConditionClass = () => {
-    switch (condition.toLowerCase()) {
-      case 'sunny':
-      case 'clear':
-        return 'daytime';
-      case 'cloudy':
-        return 'cloudy';
-      case 'rainy':
-        return 'rainy';
-      case 'snowy':
-        return 'snowy';
-      // Add a 'night' case if you have time of day data
-      default:
-        return 'nighttime';
+    const cond = condition.toLowerCase();
+    
+    // Clear and sunny conditions
+    if (cond.includes('clear') || cond.includes('sunny')) {
+      return 'daytime';
     }
+    // Cloudy conditions
+    if (cond.includes('cloud')) {
+      return 'cloudy';
+    }
+    // Rainy conditions
+    if (cond.includes('rain') || cond.includes('drizzle')) {
+      return 'rainy';
+    }
+    // Snow conditions
+    if (cond.includes('snow')) {
+      return 'snowy';
+    }
+    // Thunderstorm conditions
+    if (cond.includes('thunderstorm') || cond.includes('storm')) {
+      return 'stormy';
+    }
+    // Fog/Mist conditions
+    if (cond.includes('fog') || cond.includes('mist') || cond.includes('haze')) {
+      return 'foggy';
+    }
+    
+    // Default to daytime for unknown conditions
+    return 'daytime';
   };
 
   return (
@@ -43,6 +58,12 @@ const Background = ({ condition = 'clear' }) => {
       
       {/* Streaks for rainy */}
       <div className="rain-streaks"></div>
+
+      {/* Snow flakes */}
+      <div className="snowflake-container"></div>
+
+      {/* Storm effect */}
+      <div className="storm-flash"></div>
     </div>
   );
 };
