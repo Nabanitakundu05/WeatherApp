@@ -1,41 +1,153 @@
-* {
-  box-sizing: border-box;
-}
+import React, { useState, useEffect } from 'react';
+import { WeatherProvider, useWeatherContext } from './context/WeatherContext';
+import Background from './components/Background';
+import SearchBar from './components/SearchBar';
+import WeatherCard from './components/WeatherCard';
+import WeatherDetails from './components/WeatherDetails';
+import HourlyForecast from './components/HourlyForecast';
+import WeeklyForecast from './components/WeeklyForecast';
+import ErrorCard from './components/ErrorCard';
+import SkeletonLoader from './components/SkeletonLoader';
+import './App.css';
+import './styles/animations.css';
 
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
+const AppContent = () => {
+  const { weatherData, loading, error } = useWeatherContext();
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+  const [forecastTab, setForecastTab] = useState('hourly');
 
-body {
-  margin: 0;
-  padding: 0;
-}
-
-main {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Responsive grid adjustments */
-@media (max-width: 1024px) {
-  main > div {
-    max-width: 100%;
+  useEffect(() => {
+    if (weatherData) {
+      if (!initialLoad) {
+        setIsAnimating(true);
+        const timer = setTimeout(() => setIsAnimating(false), 1000);
+        return () => clearTimeout(timer);
+      } else {
+        setInitialLoad(false);
+      }
+    }
+  }, [weatherData]);
+  
+  if (loading && initialLoad) {
+    return (
+      <>
+        <Background />
+        <div className="absolute inset-0 bg-black bg-opacity-20 backdrop-filter backdrop-blur-xs"></div>
+        <main className="relative z-10 flex items-center justify-center w-full min-h-screen p-4 sm:p-8">
+          <SkeletonLoader />
+        </main>
+      </>
+    );
   }
-}
 
-@media (max-width: 640px) {
-  main {
-    padding: 1rem !important;
+  if (error) {
+    return (
+      <>
+        <Background />
+        <div className="absolute inset-0 bg-black bg-opacity-20 backdrop-filter backdrop-blur-xs"></div>
+        <main className="relative z-10 flex items-center justify-center w-full min-h-screen p-4 sm:p-8">
+          <div className="w-full max-w-2xl">
+            <SearchBar />
+            <ErrorCard message={error} />
+          </div>
+        </main>
+      </>
+    )
   }
+  
+  if (!weatherData) return null;
+
+  return (
+    <>
+      <Background condition={weatherData.condition} />
+      <div className="absolute inset-0 bg-black bg-opacity-20 backdrop-filter backdrop-blur-xs"></div>
+      <main className={`relative z-10 w-full min-h-screen p-4 sm:p-8 ${isAnimating ? 'weather-change-animation' : ''}`}>
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-6">
+            <SearchBar />
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 space-y-6">
+              <div className={initialLoad ? "card-animation" : ""} style={{ animationDelay: '0.2s' }}>
+                <WeatherCard {...weatherData} />
+              </div>
+
+              <div className={initialLoad ? "card-animation" : ""} style={{ animationDelay: '0.3s' }}>
+                <WeatherDetails {...weatherData} />
+              </div>
+
+              <div className={initialLoad ? "card-animation" : ""} style={{ animationDelay: '0.4s' }}>
+                <div className="glass-card noise-overlay p-6 rounded-2xl">
+                  <div className="flex gap-2 mb-6 border-b border-white border-opacity-10 pb-4">
+                    <button
+                      onClick={() => setForecastTab('hourly')}
+                      className={`px-4 py-2 rounded-lg transition-all ${
+                        forecastTab === 'hourly'
+                          ? 'glass-glow-blue bg-white bg-opacity-10'
+                          : 'text-frostWhite text-opacity-70 hover:text-opacity-100'
+                      }`}
+                    >
+                      Hourly
+                    </button>
+                    <button
+                      onClick={() => setForecastTab('weekly')}
+                      className={`px-4 py-2 rounded-lg transition-all ${
+                        forecastTab === 'weekly'
+                          ? 'glass-glow-blue bg-white bg-opacity-10'
+                          : 'text-frostWhite text-opacity-70 hover:text-opacity-100'
+                      }`}
+                    >
+                      Weekly
+                    </button>
+                  </div>
+                  {forecastTab === 'hourly' && <HourlyForecast data={weatherData.hourly} />}
+                  {forecastTab === 'weekly' && <WeeklyForecast data={weatherData.weekly} />}
+                </div>
+              </div>
+            </div>
+
+            <div className={initialLoad ? "card-animation" : ""} style={{ animationDelay: '0.5s' }}>
+              <div className="glass-card noise-overlay p-6 rounded-2xl h-fit sticky top-8">
+                <h3 className="text-lg font-bold text-frostWhite mb-4">Information</h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex justify-between items-center text-frostWhite text-opacity-80">
+                    <span>Last Updated</span>
+                    <span className="font-semibold text-frostWhite">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                  </div>
+                  <div className="h-px bg-white bg-opacity-10"></div>
+                  <div className="flex justify-between items-center text-frostWhite text-opacity-80">
+                    <span>Condition</span>
+                    <span className="font-semibold text-frostWhite">{weatherData.condition}</span>
+                  </div>
+                  <div className="h-px bg-white bg-opacity-10"></div>
+                  <div className="flex justify-between items-center text-frostWhite text-opacity-80">
+                    <span>Pressure</span>
+                    <span className="font-semibold text-frostWhite">{weatherData.pressure} hPa</span>
+                  </div>
+                  <div className="h-px bg-white bg-opacity-10"></div>
+                  <div className="flex justify-between items-center text-frostWhite text-opacity-80">
+                    <span>Visibility</span>
+                    <span className="font-semibold text-frostWhite">{weatherData.visibility} km</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </>
+  );
+};
+
+function App() {
+  return (
+    <WeatherProvider>
+      <AppContent />
+    </WeatherProvider>
+  );
 }
 
-/* Smooth transitions */
-button {
-  transition: all 0.3s ease;
-}
+export default App;
 
-button:focus-visible {
-  outline: 2px solid rgba(240, 248, 255, 0.5);
-  outline-offset: 2px;
-}
