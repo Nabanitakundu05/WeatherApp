@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { WiDaySunny, WiCloudy, WiRain, WiSnow } from 'react-icons/wi';
 import { useWeatherContext } from '../context/WeatherContext';
 import './WeatherCard.css';
 
@@ -9,60 +8,60 @@ const WeatherCard = ({ city, temperature, condition, humidity, windSpeed, feelsL
 
   useEffect(() => {
     setIsFlipping(true);
-    const timer = setTimeout(() => setIsFlipping(false), 500); // Animation duration
+    const timer = setTimeout(() => setIsFlipping(false), 500);
     return () => clearTimeout(timer);
   }, [temperature]);
 
-  const getWeatherIcon = (condition) => {
-    switch (condition) {
-      case 'Sunny':
-        return <WiDaySunny className="weather-icon sunny" />;
-      case 'Cloudy':
-        return <WiCloudy className="weather-icon cloudy" />;
-      case 'Rainy':
-        return <WiRain className="weather-icon rainy" />;
-      case 'Snowy':
-        return <WiSnow className="weather-icon snowy" />;
-      default:
-        return <WiDaySunny className="weather-icon" />;
-    }
+  const getWeatherEmoji = (condition) => {
+    const conditionLower = condition.toLowerCase();
+    if (conditionLower.includes('cloud')) return '☁';
+    if (conditionLower.includes('rain')) return '🌧';
+    if (conditionLower.includes('clear') || conditionLower.includes('sunny')) return '☀';
+    if (conditionLower.includes('snow')) return '❄';
+    if (conditionLower.includes('thunder')) return '⛈';
+    if (conditionLower.includes('fog')) return '🌫';
+    return '☁';
   };
 
   return (
-    <div className="relative glass-card noise-overlay w-full max-w-md p-8 m-4">
-      <div className="flex justify-between items-start">
+    <div className="glass-card noise-overlay p-8 rounded-2xl">
+      <div className="flex justify-between items-start mb-6">
         <div>
-          <h2 className="text-4xl font-bold text-frostWhite">{city}</h2>
-          <p className="text-lg text-frostWhite">{condition}</p>
+          <h1 className="text-4xl font-bold text-frostWhite">{city}</h1>
+          <p className="text-frostWhite text-opacity-80 mt-2">{condition}</p>
         </div>
-        <div className="text-6xl text-frostWhite">
-          {getWeatherIcon(condition)}
+        <div className="text-6xl">
+          {getWeatherEmoji(condition)}
         </div>
       </div>
 
-      <div className="text-center my-12 relative">
-        <h1 className={`text-9xl font-extrabold text-frostWhite tracking-tighter ${isFlipping ? 'temp-flip' : ''}`}>{temperature}°</h1>
-        <div className="absolute top-0 right-0">
-          <button onClick={toggleTempUnit} className="text-frostWhite focus:outline-none">
-            <span className={tempUnit === 'C' ? 'font-bold' : ''}>°C</span> / <span className={tempUnit === 'F' ? 'font-bold' : ''}>°F</span>
+      <div className="flex items-baseline gap-2 mb-8">
+        <span className={`text-7xl font-bold text-frostWhite ${isFlipping ? 'temp-flip' : ''}`}>
+          {temperature}
+        </span>
+        <div className="flex flex-col">
+          <span className="text-3xl text-frostWhite">°</span>
+          <button 
+            onClick={toggleTempUnit} 
+            className="text-sm text-frostWhite text-opacity-60 hover:text-opacity-100 transition-opacity mt-1 font-semibold"
+          >
+            {tempUnit}
           </button>
         </div>
       </div>
 
-      <div className="glass-dark p-6 rounded-2xl">
-        <div className="flex justify-between text-frostWhite">
-          <div className="text-center">
-            <p className="font-light text-sm">Feels Like</p>
-            <p className="font-bold text-lg">{feelsLike}°</p>
-          </div>
-          <div className="text-center">
-            <p className="font-light text-sm">Humidity</p>
-            <p className="font-bold text-lg">{humidity}%</p>
-          </div>
-          <div className="text-center">
-            <p className="font-light text-sm">Wind</p>
-            <p className="font-bold text-lg">{windSpeed} km/h</p>
-          </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="glass-dark p-4 rounded-xl">
+          <p className="text-frostWhite text-opacity-60 text-sm mb-1">Feels Like</p>
+          <p className="text-2xl font-bold text-frostWhite">{feelsLike}°</p>
+        </div>
+        <div className="glass-dark p-4 rounded-xl">
+          <p className="text-frostWhite text-opacity-60 text-sm mb-1">Humidity</p>
+          <p className="text-2xl font-bold text-frostWhite">{humidity}%</p>
+        </div>
+        <div className="glass-dark p-4 rounded-xl">
+          <p className="text-frostWhite text-opacity-60 text-sm mb-1">Wind</p>
+          <p className="text-2xl font-bold text-frostWhite">{windSpeed}</p>
         </div>
       </div>
     </div>
