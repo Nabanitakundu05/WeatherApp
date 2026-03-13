@@ -1,23 +1,20 @@
 import React from 'react';
-import { WiDaySunny, WiCloudy, WiRain, WiSnow, WiThunderstorm, WiFog } from 'react-icons/wi';
 import './WeeklyForecast.css';
 
-const getIcon = (condition) => {
-    switch (condition) {
-      case 'Clouds': return <WiCloudy size={36} />;
-      case 'Rain': return <WiRain size={36} />;
-      case 'Clear': return <WiDaySunny size={36} />;
-      case 'Snow': return <WiSnow size={36} />;
-      case 'Thunderstorm': return <WiThunderstorm size={36} />;
-      case 'Fog': return <WiFog size={36} />;
-      case 'Mist': return <WiFog size={36} />;
-      default: return <WiDaySunny size={36} />;
-    }
+const getEmoji = (condition) => {
+    const conditionLower = condition.toLowerCase();
+    if (conditionLower.includes('cloud')) return '☁';
+    if (conditionLower.includes('rain')) return '🌧';
+    if (conditionLower.includes('clear') || conditionLower.includes('sunny')) return '☀';
+    if (conditionLower.includes('snow')) return '❄';
+    if (conditionLower.includes('thunder')) return '⛈';
+    if (conditionLower.includes('fog')) return '🌫';
+    return '☁';
 };
 
 const TempBar = ({ high, low }) => {
-    const maxTemp = 35; // A reasonable max for gradient calculation
-    const minTemp = -5; // A reasonable min
+    const maxTemp = 35;
+    const minTemp = -5;
     const tempRange = maxTemp - minTemp;
     
     const lowPercent = Math.max(0, ((low - minTemp) / tempRange) * 100);
@@ -31,7 +28,7 @@ const TempBar = ({ high, low }) => {
     )`;
 
     return (
-        <div className="w-full h-2 rounded-full overflow-hidden bg-white bg-opacity-20">
+        <div className="w-full h-2 rounded-full overflow-hidden bg-white bg-opacity-10">
             <div className="h-full" style={{ background: gradient }}></div>
         </div>
     );
@@ -41,22 +38,22 @@ const WeeklyForecast = ({ data }) => {
   if (!data) return null;
 
   return (
-    <div className="glass-card glass-dark noise-overlay p-6 rounded-2xl mt-8">
-      <ul>
-        {data.map((day, index) => (
-          <li key={index} className="weekly-forecast-item flex items-center justify-between py-3 border-b border-white border-opacity-10">
-            <p className="w-1/4 font-bold text-lg text-frostWhite">{day.day}</p>
-            <div className="w-1/4 flex justify-center text-frostWhite">
-                {getIcon(day.condition)}
+    <div className="space-y-3">
+      {data.map((day, index) => (
+        <div key={index} className="flex items-center justify-between gap-4 p-4 rounded-xl bg-white bg-opacity-5 hover:bg-opacity-10 transition-colors">
+          <p className="w-16 font-semibold text-frostWhite text-sm">{day.day}</p>
+          <div className="text-3xl">
+            {getEmoji(day.condition)}
+          </div>
+          <div className="flex-1 flex items-center gap-4">
+            <div className="flex items-center gap-2 min-w-fit">
+              <span className="text-frostWhite text-opacity-70 text-sm">{day.low}°</span>
+              <TempBar high={day.high} low={day.low} />
+              <span className="font-bold text-frostWhite text-sm">{day.high}°</span>
             </div>
-            <div className="w-1/2 flex items-center justify-end text-frostWhite">
-                <p className="mr-4 text-frostWhite text-opacity-70">{day.low}°</p>
-                <TempBar high={day.high} low={day.low} />
-                <p className="ml-4 font-bold">{day.high}°</p>
-            </div>
-          </li>
-        ))}
-      </ul>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
